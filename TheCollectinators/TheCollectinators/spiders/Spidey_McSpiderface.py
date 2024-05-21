@@ -1,4 +1,5 @@
 import scrapy
+from loguru import logger
 
 
 class SpideyMcSpiderface(scrapy.Spider):
