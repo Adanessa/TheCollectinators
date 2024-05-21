@@ -1,8 +1,8 @@
 import scrapy
 
 
-class SomethingSpider(scrapy.Spider):
-    name = "something"
+class SpideyMcSpiderface(scrapy.Spider):
+    name = "Link_Crawler"
     allowed_domains = ["something.com"]
     start_urls = ["https://something.com"]
 
