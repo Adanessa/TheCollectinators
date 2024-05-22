@@ -25,9 +25,4 @@ We're always on the lookout for new recruits to join our spider squad! If you've
 🕸️ **Charlotte Webb:** Data Wrangler Extraordinaire
 🕷️ **Arachno-Bot:** Automated Link Collector
 
-## Contact Us
-Got questions, feedback, or just want to chat? Drop us a line at team@thecollectinators.com. We don't bite... usually.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
