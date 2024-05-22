@@ -22,3 +22,4 @@ import scrapy
 class TheCollectinatorsItem(scrapy.Item):
     title = scrapy.Field()
     link = scrapy.Field()
+    data = scrapy.Field()

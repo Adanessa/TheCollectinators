@@ -1,0 +1,73 @@
+xpath = response.xpath('//*[@id="mw-content-text"]/div/table[2]/tbody/tr'):
+start_urls = https://starfieldwiki.net/wiki/Starfield:Flora
+
+
+Outpost Production data!
+Rest of the stuffs can be used as validation data.
+Very nice stuffs.
+
+
+
+          - Spider Used - 
+
+
+import scrapy
+from TheCollectinators.items import TheCollectinatorsItem
+
+class SpideyMcSpiderfaceSpider(scrapy.Spider):
+    name = "spidey_mcspiderface"
+    allowed_domains = ["starfieldwiki.net"]
+    start_urls = ["https://starfieldwiki.net/wiki/Starfield:Flora"]
+
+    def parse(self, response):
+        # Extract links from the current page
+        for link in response.css('.mw-parser-output a::attr(href)').getall():
+            yield response.follow(link, self.parse_flora_page)
+
+    def parse_flora_page(self, response):
+        # Extract data from the specific element
+        for row in response.xpath('//*[@id="mw-content-text"]/div/table[2]/tbody/tr'):
+            item = TheCollectinatorsItem()
+            item['title'] = response.css('title::text').get()
+            item['link'] = response.url
+            # Extract data from the table rows as needed
+            item['data'] = row.xpath('.//text()').getall()
+            yield item
+
+
+
+
+Data snippet:
+
+{"title": "Starfield:Bitter Bramble - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bitter_Bramble", "data": ["\n", "Feynman IV", "\n", "Craters, Savanna, Mountains", "\n", "Toxin", "\n", "Yes\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Planet", "\n", "Biomes", "\n", "Resource\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Copernicus IV", "\n", "Swamp", "\n", "Membrane", "\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Leviathan IV", "\n", "Swamp", "\n", "Structural", "\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Rana VI-a", "\n", "Swamp", "\n", "Antimicrobial", "\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Tirna VIII-c", "\n", "Swamp, Savanna, Mountains, Hills", "\n", "Sealant", "\n"]},
+{"title": "Starfield:Bellona Bush - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Bellona_Bush", "data": ["\n", "Zelazny II", "\n", "Swamp, Tropical Forest", "\n", "Cosmetic", "\n"]},
+{"title": "Starfield:Barrenbulb - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Barrenbulb", "data": ["\n", "Planet", "\n", "Biomes", "\n", "Resource\n"]},
+{"title": "Starfield:Barrenbulb - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Barrenbulb", "data": ["\n", "Kang III", "\n", "Rocky Desert", "\n", "Ornamental", "\n"]},
+{"title": "Starfield:Barrenbulb - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Barrenbulb", "data": ["\n", "Piazzi I", "\n", "Rocky Desert", "\n", "Fiber", "\n"]},
+{"title": "Starfield:Barrenbulb - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Barrenbulb", "data": ["\n", "Polvo", "\n", "Rocky Desert, Hills", "\n", "Fiber", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Planet", "\n", "Biomes", "\n", "Resource\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Beta Marae I", "\n", "Wetlands, Deciduous Forest, Tropical Forest", "\n", "Sealant", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Eridani II", "\n", "Tropical Forest", "\n", "Metabolic Agent", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Kumasi I", "\n", "Wetlands, Tropical Forest, Deciduous Forest", "\n", "Toxin", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Schrodinger VIII-a", "\n", "Deciduous Forest, Tropical Forest", "\n", "Sealant", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Zelazny II", "\n", "Swamp, Tropical Forest", "\n", "Fiber", "\n"]},
+{"title": "Starfield:Autumn Junglebloom - Starfield Wiki", "link": "https://starfieldwiki.net/wiki/Starfield:Autumn_Junglebloom", "data": ["\n", "Zelazny III", "\n", "Tropical Forest, Wetlands", "\n", "Sealant", "\n"]}
+
+
+
+
+
+nice one!
+
+Allright, same thing again but different start url. We will also need pagBut now we will also have pagination and data collection from 2 tables:
+
+start url: https://starfieldwiki.net/wiki/Category:Starfield-Planets
+pagination: same as before (look for <a> contingin "next page"
+first table : //*[@id="mw-content-text"]/div/table[1]/tbody
+second: //*[@id="mw-content-text"]/div/table[2]/tbody
+please <3

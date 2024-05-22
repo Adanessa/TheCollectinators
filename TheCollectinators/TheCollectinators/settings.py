@@ -24,6 +24,8 @@ SPIDER_MODULES = ["TheCollectinators.spiders"]
 NEWSPIDER_MODULE = "TheCollectinators.spiders"
 
 
+#DEPTH_LIMIT = 2
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "TheCollectinators (+http://www.yourdomain.com)"
 

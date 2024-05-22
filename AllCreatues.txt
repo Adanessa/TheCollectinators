@@ -1,0 +1,30 @@
+Xpath = response.xpath('//a[contains(text(), "next page")]/@href').get()
+Start url = "https://starfieldwiki.net/wiki/Category:Starfield-Creatures-All"
+
+658 needed urls. Total collected : 661.  Spider score 98,94  of 100
+
+
+         -  Spider used  -
+
+
+
+import scrapy
+from TheCollectinators.items import TheCollectinatorsItem
+
+class SSpideyMcSpiderfaceSpider(scrapy.Spider):
+    name = "spidey_mcspiderface"
+    allowed_domains = ["starfieldwiki.net"]
+    start_urls = ["https://starfieldwiki.net/wiki/Category:Starfield-Creatures-All"]
+
+    def parse(self, response):
+        # Extract links from the current page
+        for link in response.css('.mw-category a::attr(href)').getall():
+            item = TheCollectinatorsItem()
+            item['title'] = response.css('title::text').get()
+            item['link'] = response.urljoin(link)
+            yield item
+        
+        # Follow pagination link if present
+        next_page = response.xpath('//a[contains(text(), "next page")]/@href').get()
+        if next_page:
+            yield response.follow(next_page, self.parse)

@@ -90,4 +90,5 @@ class ScrapeOpsFakeBrowserHeadersMiddleware:
         random_header = self._get_random_header()
         for key, val in random_header.items():
             request.headers[key] = val
-        spider.logger.info(f"Using headers: {random_header}") 
+        spider.logger.info(f"Using headers: {random_header}")
+        spider.logger.debug("ScrapeOpsFakeBrowserHeadersMiddleware is processing the request.")
