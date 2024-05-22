@@ -1,11 +1,15 @@
+import requests
 import scrapy
-from loguru import logger
+from TheCollectinators.items import TheCollectinatorsItem
 
-
-class SpideyMcSpiderface(scrapy.Spider):
-    name = "Link_Crawler"
-    allowed_domains = ["something.com"]
-    start_urls = ["https://something.com"]
+class SpideyMcSpiderfaceSpider(scrapy.Spider):
+    name = "spidey_mcspiderface"
+    allowed_domains = ["starfieldwiki.net/wiki/Home"]
+    start_urls = ["https://starfieldwiki.net/wiki/Home"]
 
     def parse(self, response):
-        pass
+        for link in response.css('a::attr(href)').getall():
+            item = TheCollectinatorsItem()
+            item['title'] = response.css('title::text').get()
+            item['link'] = response.urljoin(link)
+            yield item

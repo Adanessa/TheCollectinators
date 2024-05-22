@@ -5,8 +5,20 @@
 
 import scrapy
 
+# class TheCollectinatorsSystem(scrapy.Item):
+#     system_name = scrapy.Field()
+#     planets = scrapy.Field()
 
-class ThecollectinatorsItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+# class TheCollectinatorsPlanet(scrapy.Item):
+#     system = scrapy.Field()
+#     planet = scrapy.Field()
+#     day = scrapy.Field()
+#     hab_rank = scrapy.Field()
+#     resources = scrapy.Field()
+#     level = scrapy.Field()
+#     details = scrapy.Field()
+
+
+class TheCollectinatorsItem(scrapy.Item):
+    title = scrapy.Field()
+    link = scrapy.Field()

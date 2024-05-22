@@ -2,20 +2,23 @@ from loguru import logger
 
 
 
-# Configure Loguru settings
-logger.configure(
-    handlers=[
-        {"sink": "console", "level": "INFO"},  # Log messages to console with INFO level and above
-        {"sink": "file.log", "level": "DEBUG"}  # Log messages to file.log with DEBUG level and above
-    ]
-)
+# # Configure Loguru settings
+# logger.configure(
+#     handlers=[
+#         {"sink": "console", "level": "INFO"},  # Log messages to console with INFO level and above
+#         {"sink": "file.log", "level": "DEBUG"}  # Log messages to file.log with DEBUG level and above
+#     ]
+# )
 
 
-logger.debug("This is a debug message")
-logger.info("This is an info message")
-logger.warning("This is a warning message")
-logger.error("This is an error message")
-logger.critical("This is a critical message")
+# logger.debug("This is a debug message")
+# logger.info("This is an info message")
+# logger.warning("This is a warning message")
+# logger.error("This is an error message")
+# logger.critical("This is a critical message")
+
+BOT_NAME = "TheCollectinators"
+
 
 SPIDER_MODULES = ["TheCollectinators.spiders"]
 NEWSPIDER_MODULE = "TheCollectinators.spiders"
@@ -33,7 +36,7 @@ SCRAPEOPS_API_KEY = 'd2a48e99-25e9-4012-93dd-e46cff9e52db'
 SCRAPEOPS_FAKE_HEADERS_ENABLED = True
 
 DOWNLOADER_MIDDLEWARES = {
-    'Starfield.middlewares.ScrapeOpsFakeBrowserHeadersMiddleware': 400,
+    'TheCollectinators.middlewares.ScrapeOpsFakeBrowserHeadersMiddleware': 400,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
