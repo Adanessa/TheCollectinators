@@ -1,0 +1,2 @@
+2024-05-23 17:09:47 [scrapy.utils.log] INFO: Scrapy 2.11.2 started (bot: TheCollectinators)
+2024-05-23 17:09:47 [scrapy.utils.log] INFO: Versions: lxml 5.2.2.0, libxml2 2.11.7, cssselect 1.2.0, parsel 1.9.1, w3lib 2.1.2, Twisted 24.3.0, Python 3.12.3 (tags/v3.12.3:f6650f9, Apr  9 2024, 14:05:25) [MSC v.1938 64 bit (AMD64)], pyOpenSSL 24.1.0 (OpenSSL 3.2.1 30 Jan 2024), cryptography 42.0.7, Platform Windows-11-10.0.22631-SP0
