@@ -23,6 +23,8 @@ BOT_NAME = "TheCollectinators"
 SPIDER_MODULES = ["TheCollectinators.spiders"]
 NEWSPIDER_MODULE = "TheCollectinators.spiders"
 
+LOG_FILE = 'scrapy_log.txt'
+
 
 #DEPTH_LIMIT = 2
 

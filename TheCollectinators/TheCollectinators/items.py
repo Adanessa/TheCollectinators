@@ -23,3 +23,5 @@ class TheCollectinatorsItem(scrapy.Item):
     title = scrapy.Field()
     link = scrapy.Field()
     data = scrapy.Field()
+    data_from_first_table = scrapy.Field()
+    data_from_second_table = scrapy.Field()
