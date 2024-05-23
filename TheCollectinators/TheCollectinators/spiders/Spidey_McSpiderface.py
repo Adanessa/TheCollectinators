@@ -43,29 +43,30 @@ class SpideyMcSpiderfaceSpider(scrapy.Spider):
         self.logger.info('Parsing data page: %s', response.url)
 
         # Extract data from all tables on the page
-        data_items = []
+        planets = []
+        resources = []
+
         for table in response.xpath('//table'):
-            data = table.extract()
+            rows = table.xpath('.//tr')
 
-            # Clean up the data using BeautifulSoup
-            soup = BeautifulSoup(data, 'html.parser')
-            cleaned_data = soup.get_text()
+            for row in rows:
+                planet = row.xpath('./td[1]').get()
+                resource = row.xpath('./td[2]').get()
 
-            # Store cleaned data in data item
-            data_item = TheCollectinatorsItem()
-            data_item['data'] = cleaned_data
-            data_items.append(data_item)
+                if planet:
+                    planet_text = self.clean_text(planet)
+                    planets.append(planet_text)
+                
+                if resource:
+                    resource_text = self.clean_text(resource)
+                    resources.append(resource_text)
 
-        # Extract data from column 1 and store in planets item
-        planets_item = TheCollectinatorsItem()
-        planets_data = [cell.xpath('.//text()').get() for cell in response.xpath('//table//tr/td[1]')]
-        planets_item['planets'] = planets_data
-        yield planets_item
+        item = TheCollectinatorsItem()
+        item['planets'] = planets
+        item['resource'] = resources
+        yield item
 
-        # Extract data from column 2 and store in resources item
-        resources_item = TheCollectinatorsItem()
-        resources_data = [cell.xpath('.//text()').get() for cell in response.xpath('//table//tr/td[2]')]
-        resources_item['resources'] = resources_data
-        yield resources_item
-
-        return data_items
+    def clean_text(self, text):
+        # Function to clean up text by removing newline characters and extra spaces
+        soup = BeautifulSoup(text, 'html.parser')
+        return soup.get_text(separator=' ').strip()
