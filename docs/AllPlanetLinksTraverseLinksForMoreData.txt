@@ -1,0 +1,44 @@
+Collects all planet links for current page then moves on to next page untill no next page.
+Only collects links atm but it can traverse for some data. Not the best data though
+
+
+
+
+   - Spider used  -
+
+import scrapy
+
+class SpideyMcSpiderfaceSpider(scrapy.Spider):
+    name = "spidey_mcspiderface"
+    allowed_domains = ["starfieldwiki.net"]
+    start_urls = ["https://starfieldwiki.net/wiki/Category:Starfield-Planets"]
+
+    def __init__(self):
+        self.planet_links = set()
+
+    def parse(self, response):
+        self.logger.info(f"Parsing page: {response.url}")
+
+        # Collect links to planet pages
+        links = response.xpath('//div[@id="mw-pages"]//a[@title]/@href').getall()
+        for link in links:
+            full_link = response.urljoin(link)
+            self.planet_links.add(full_link)
+
+        # Log the number of collected links so far
+        self.logger.info(f"Collected {len(self.planet_links)} planet links so far")
+
+        # Follow pagination link if present
+        next_page = response.xpath('//a[contains(text(), "next page")]/@href').get()
+        if next_page:
+            next_page = response.urljoin(next_page)
+            self.logger.info(f"Found next page link: {next_page}")
+            yield scrapy.Request(url=next_page, callback=self.parse)
+        else:
+            self.logger.info("No next page link found")
+
+    def closed(self, reason):
+        self.logger.info(f"Spider closed: {reason}")
+        self.logger.info(f"Total unique planet links collected: {len(self.planet_links)}")
+        for link in self.planet_links:
+            self.logger.info(f"Planet link: {link}")
