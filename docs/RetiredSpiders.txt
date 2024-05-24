@@ -1,0 +1,83 @@
+import scrapy
+from bs4 import BeautifulSoup
+
+class ArachnoBotSpider(scrapy.Spider):
+    name = "Arachno_Bot"
+    allowed_domains = ["inara.cz"]
+    start_urls = ["https://inara.cz/starfield/starsystems-list/"]
+
+    def parse(self, response):
+        self.logger.info('Parsing main page: %s', response.url)
+        
+        # Extract links within the body that contain "/starfield/starsystem/" in their href attribute
+        links = response.xpath('//body//a[contains(@href, "/starfield/starsystem/")]/@href').getall()
+        
+        for link in links:
+            yield scrapy.Request(url=response.urljoin(link), callback=self.parse_star_system)
+
+    def parse_star_system(self, response):
+        self.logger.info('Parsing star system page: %s', response.url)
+
+        # Parse HTML content of the star system page with Beautiful Soup
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Extract the star system name
+        system_name = soup.find('h1').text.strip()
+
+        # Find all planet containers (adjust the selector as needed)
+        planet_containers = soup.find_all('h3')  # Assuming planet names are in <h3> tags
+
+        system_data = {system_name: {}}
+
+        for planet_name_tag in planet_containers:
+            # Extract the planet name
+            planet_name = planet_name_tag.text.strip()
+
+            # Extract attributes for the current planet
+            attributes = {}
+
+            # Navigate to the parent div of the planet name and extract its sibling divs containing attributes
+            planet_info_div = planet_name_tag.find_parent('div', class_='planet-container')
+            if planet_info_div:
+                attribute_elements = planet_info_div.find_all('div', class_='itempaircontainer')
+                for element in attribute_elements:
+                    label = element.find(class_='itempairlabel').text.strip()
+                    value = element.find(class_='itempairvalue').text.strip()
+                    attributes[label] = value
+
+                # Define a function to extract tags based on a CSS selector
+                def extract_tags(selector):
+                    return [tag.text.strip() for tag in planet_info_div.select(selector)]
+
+                # Extract nested elements for specific attributes
+                biomes = extract_tags('span.uppercase.minor.small:contains("Biomes") + div.tagcontainer span.tag')
+                traits = extract_tags('span.uppercase.minor.small:contains("Traits") + div.tagcontainer span.tag')
+                resources = extract_tags('span.uppercase.minor.small:contains("Resources") + div.tagcontainer a.tag')
+                domesticable = extract_tags('span.uppercase.minor.small:contains("Domesticable") + div.tagcontainer span.tag')
+                gatherable = extract_tags('span.uppercase.minor.small:contains("Gatherable") + div.tagcontainer span.tag')
+                hab_rank = extract_tags('span.uppercase.minor.small:contains("Hab Rank") + div.tagcontainer span.tag')
+                days = extract_tags('span.uppercase.minor.small:contains("Days") + div.tagcontainer span.tag')
+
+                # Organize extracted data into desired structure
+                planet_data = {
+                    "type": attributes.get("Planet type", ""),
+                    "gravity": attributes.get("Gravity", ""),
+                    "temperature": attributes.get("Temperature", ""),
+                    "atmosphere": attributes.get("Atmosphere", ""),
+                    "magnetosphere": attributes.get("Magnetosphere", ""),
+                    "water": attributes.get("Water", ""),
+                    "biomes": biomes,
+                    "traits": traits,
+                    "resources": resources,
+                    "domesticable": domesticable,
+                    "gatherable": gatherable,
+                    "hab_rank": hab_rank,
+                    "days": days
+                }
+                
+                # Link the planet name with its attributes under the star system
+                system_data[system_name][planet_name] = planet_data
+            else:
+                self.logger.warning('No attributes found for planet: %s', planet_name)
+            
+        yield system_data

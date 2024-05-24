@@ -1,25 +1,21 @@
-import scrapy
+import requests
+from bs4 import BeautifulSoup
 
-class ArachnoBotSpider(scrapy.Spider):
-    name = "Arachno_Bot"
-    allowed_domains = ["inara.cz"]
-    start_urls = ["https://inara.cz/starfield/starsystems-list/"]
+# URL of the webpage
+url = "https://inara.cz/starfield/starsystem/14/"
 
-    def parse(self, response):
-        self.logger.info('Parsing main page: %s', response.url)
-        
-        # Select the table rows directly
-        odd_rows = response.xpath('//*[@id="DataTables_Table_0"]/tbody/tr[@class="odd"]')
-        even_rows = response.xpath('//*[@id="DataTables_Table_0"]/tbody/tr[@class="even"]')
-        
-        # Yield the odd rows
-        for row in odd_rows:
-            yield {
-                'row_content': row.extract()
-            }
-        
-        # Yield the even rows
-        for row in even_rows:
-            yield {
-                'row_content': row.extract()
-            }
+# Send a GET request to the URL
+response = requests.get(url)
+
+# Check if the request was successful (status code 200)
+if response.status_code == 200:
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Extract all text from the parsed HTML
+    all_text = soup.get_text(separator="\n", strip=True)
+    
+    # Print the extracted text
+    print(all_text)
+else:
+    print("Failed to fetch the webpage:", response.status_code)
